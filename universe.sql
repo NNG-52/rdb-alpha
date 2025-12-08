@@ -128,24 +128,41 @@ CREATE TABLE public.planet (
     description text,
     age_in_millions_of_years numeric(4,1),
     has_life boolean,
-    star_id integer
+    star_id integer,
+    number_of_moons integer
 );
 
 
 ALTER TABLE public.planet OWNER TO freecodecamp;
 
 --
--- Name: planet_moon; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: planet_moon_star; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.planet_moon (
+CREATE TABLE public.planet_moon_star (
+    planet_moon_star_id integer NOT NULL,
     planet_id integer NOT NULL,
     moon_id integer NOT NULL,
-    star_id integer
+    star_id integer NOT NULL,
+    name character varying(50)
 );
 
 
-ALTER TABLE public.planet_moon OWNER TO freecodecamp;
+ALTER TABLE public.planet_moon_star OWNER TO freecodecamp;
+
+--
+-- Name: planet_moon_star_planet_moon_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE public.planet_moon_star ALTER COLUMN planet_moon_star_id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.planet_moon_star_planet_moon_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: planet_planet_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
@@ -178,7 +195,8 @@ CREATE TABLE public.star (
     name character varying(50) NOT NULL,
     description text,
     age_in_millions_of_years numeric(4,1),
-    galaxy_id integer
+    galaxy_id integer,
+    number_of_planets integer
 );
 
 
@@ -276,40 +294,40 @@ INSERT INTO public.moon VALUES (20, 'moon2planet2Vega', 'moon of planet2Vega', 5
 -- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.planet VALUES (1, 'planet1Sirius', 'planet of Sirius', 100.0, true, 1);
-INSERT INTO public.planet VALUES (3, 'planet2Sirius', 'planet of Sirius', 100.0, true, 1);
-INSERT INTO public.planet VALUES (4, 'planet1Alpheratz', 'planet of Alpheratz', 100.0, false, 2);
-INSERT INTO public.planet VALUES (5, 'planet2Alpheratz', 'planet of Alpheratz', 100.0, false, 2);
-INSERT INTO public.planet VALUES (6, 'planet1NGC604', 'planet of NGC 604', 100.0, true, 3);
-INSERT INTO public.planet VALUES (7, 'planet2NGC604', 'planet of NGC 604', 100.0, true, 3);
-INSERT INTO public.planet VALUES (8, 'planet1Alkaid', 'planet of Alkaid', 100.0, false, 4);
-INSERT INTO public.planet VALUES (9, 'planet2Alkaid', 'planet of Alkaid', 100.0, false, 4);
-INSERT INTO public.planet VALUES (10, 'planet1Vega', 'planet of Vega', 100.0, true, 5);
-INSERT INTO public.planet VALUES (11, 'planet2Vega', 'planet of Vega', 100.0, true, 5);
-INSERT INTO public.planet VALUES (12, 'planet1OrionNebula', 'planet of Orion Nebula', 100.0, false, 6);
-INSERT INTO public.planet VALUES (13, 'planet2OrionNebula', 'planet of Orion Nebula', 100.0, false, 6);
+INSERT INTO public.planet VALUES (5, 'planet2Alpheratz', 'planet of Alpheratz', 100.0, false, 2, NULL);
+INSERT INTO public.planet VALUES (6, 'planet1NGC604', 'planet of NGC 604', 100.0, true, 3, NULL);
+INSERT INTO public.planet VALUES (7, 'planet2NGC604', 'planet of NGC 604', 100.0, true, 3, NULL);
+INSERT INTO public.planet VALUES (8, 'planet1Alkaid', 'planet of Alkaid', 100.0, false, 4, NULL);
+INSERT INTO public.planet VALUES (9, 'planet2Alkaid', 'planet of Alkaid', 100.0, false, 4, NULL);
+INSERT INTO public.planet VALUES (10, 'planet1Vega', 'planet of Vega', 100.0, true, 5, NULL);
+INSERT INTO public.planet VALUES (11, 'planet2Vega', 'planet of Vega', 100.0, true, 5, NULL);
+INSERT INTO public.planet VALUES (12, 'planet1OrionNebula', 'planet of Orion Nebula', 100.0, false, 6, NULL);
+INSERT INTO public.planet VALUES (13, 'planet2OrionNebula', 'planet of Orion Nebula', 100.0, false, 6, NULL);
+INSERT INTO public.planet VALUES (1, 'planet1Sirius', 'planet of Sirius', 100.0, true, 1, 2);
+INSERT INTO public.planet VALUES (3, 'planet2Sirius', 'planet of Sirius', 100.0, true, 1, 2);
+INSERT INTO public.planet VALUES (4, 'planet1Alpheratz', 'planet of Alpheratz', 100.0, false, 2, 2);
 
 
 --
--- Data for Name: planet_moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Data for Name: planet_moon_star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.planet_moon VALUES (1, 1, 1);
-INSERT INTO public.planet_moon VALUES (1, 2, 1);
-INSERT INTO public.planet_moon VALUES (3, 3, 1);
-INSERT INTO public.planet_moon VALUES (3, 4, 1);
+INSERT INTO public.planet_moon_star OVERRIDING SYSTEM VALUE VALUES (1, 1, 1, 1, 'group1');
+INSERT INTO public.planet_moon_star OVERRIDING SYSTEM VALUE VALUES (2, 1, 2, 1, 'group2');
+INSERT INTO public.planet_moon_star OVERRIDING SYSTEM VALUE VALUES (3, 3, 3, 1, 'group3');
+INSERT INTO public.planet_moon_star OVERRIDING SYSTEM VALUE VALUES (4, 3, 4, 1, 'group4');
 
 
 --
 -- Data for Name: star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.star VALUES (1, 'Sirius', 'brightest star in the night sky, located in the constellation Canis Major and known to astronomers as a binary star system', 228.0, NULL);
-INSERT INTO public.star VALUES (2, 'Alpheratz', ' brightest star in the constellation Andromeda and is also a prominent corner star in the Great Square of Pegasus asterism', 70.0, NULL);
-INSERT INTO public.star VALUES (3, 'NGC 604', 'bright and large star-forming region located within the galaxy', 3.5, NULL);
-INSERT INTO public.star VALUES (4, 'Alkaid', 'prominent star in our own Milky Way galaxy that acts as a celestial landmark to find the Whirlpool Galaxy', 10.0, NULL);
-INSERT INTO public.star VALUES (5, 'Vega', 'a bright star in the constellation Lyra', 700.0, NULL);
-INSERT INTO public.star VALUES (6, 'Orion Nebula', 'A region of active star formation within the constellation Orion', 3.0, NULL);
+INSERT INTO public.star VALUES (5, 'Vega', 'a bright star in the constellation Lyra', 700.0, 6, NULL);
+INSERT INTO public.star VALUES (6, 'Orion Nebula', 'A region of active star formation within the constellation Orion', 3.0, 7, NULL);
+INSERT INTO public.star VALUES (1, 'Sirius', 'brightest star in the night sky, located in the constellation Canis Major and known to astronomers as a binary star system', 228.0, 1, 0);
+INSERT INTO public.star VALUES (2, 'Alpheratz', ' brightest star in the constellation Andromeda and is also a prominent corner star in the Great Square of Pegasus asterism', 70.0, 3, 0);
+INSERT INTO public.star VALUES (3, 'NGC 604', 'bright and large star-forming region located within the galaxy', 3.5, 4, 0);
+INSERT INTO public.star VALUES (4, 'Alkaid', 'prominent star in our own Milky Way galaxy that acts as a celestial landmark to find the Whirlpool Galaxy', 10.0, 5, 0);
 
 
 --
@@ -324,6 +342,13 @@ SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 7, true);
 --
 
 SELECT pg_catalog.setval('public.moon_moon_id_seq', 20, true);
+
+
+--
+-- Name: planet_moon_star_planet_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.planet_moon_star_planet_moon_id_seq', 4, true);
 
 
 --
@@ -373,11 +398,19 @@ ALTER TABLE ONLY public.moon
 
 
 --
--- Name: planet_moon planet_moon_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: planet_moon_star planet_moon_star_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.planet_moon
-    ADD CONSTRAINT planet_moon_pkey PRIMARY KEY (planet_id, moon_id);
+ALTER TABLE ONLY public.planet_moon_star
+    ADD CONSTRAINT planet_moon_star_pkey PRIMARY KEY (planet_moon_star_id);
+
+
+--
+-- Name: planet_moon_star planet_moon_star_planet_id_moon_id_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.planet_moon_star
+    ADD CONSTRAINT planet_moon_star_planet_id_moon_id_key UNIQUE (planet_id, moon_id);
 
 
 --
@@ -421,27 +454,27 @@ ALTER TABLE ONLY public.moon
 
 
 --
--- Name: planet_moon planet_moon_moon_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: planet_moon_star planet_moon_star_moon_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.planet_moon
-    ADD CONSTRAINT planet_moon_moon_id_fkey FOREIGN KEY (moon_id) REFERENCES public.moon(moon_id);
-
-
---
--- Name: planet_moon planet_moon_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.planet_moon
-    ADD CONSTRAINT planet_moon_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
+ALTER TABLE ONLY public.planet_moon_star
+    ADD CONSTRAINT planet_moon_star_moon_id_fkey FOREIGN KEY (moon_id) REFERENCES public.moon(moon_id) ON DELETE CASCADE;
 
 
 --
--- Name: planet_moon planet_moon_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: planet_moon_star planet_moon_star_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.planet_moon
-    ADD CONSTRAINT planet_moon_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id);
+ALTER TABLE ONLY public.planet_moon_star
+    ADD CONSTRAINT planet_moon_star_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id) ON DELETE CASCADE;
+
+
+--
+-- Name: planet_moon_star planet_moon_star_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.planet_moon_star
+    ADD CONSTRAINT planet_moon_star_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id) ON DELETE CASCADE;
 
 
 --
